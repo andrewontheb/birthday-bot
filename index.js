@@ -98,6 +98,8 @@ bot.command('set_birthday', (ctx) => {
 
 // Команда для добавления группового чата в список
 bot.command('join_chat', (ctx) => {
+    console.log('Command from chat id:', ctx.chat?.id);
+    ctx.reply('chat.id = ' + ctx.chat?.id);
   if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
     if (!chats.includes(ctx.chat.id)) {
       chats.push(ctx.chat.id);
@@ -110,6 +112,17 @@ bot.command('join_chat', (ctx) => {
     ctx.reply('Эта команда работает только в группах.');
   }
 });
+
+bot.command('show_data', (ctx) => {
+    if (ctx.from.id !== process.env.ADMIN_ID) {
+      return ctx.reply('У тебя нет доступа к этой команде.');
+    }
+  
+    const bdData = fs.readFileSync('birthdays.json', 'utf-8');
+    const chatsData = fs.readFileSync('chats.json', 'utf-8');
+    ctx.reply('Содержимое файла birthdays.json:\n' + bdData);
+    ctx.reply('Содержимое файла chats.json:\n' + chatsData);
+  });
 
 // Ежедневная проверка и отправка поздравлений в 9 утра
 cron.schedule('0 9 * * *', () => {
@@ -127,6 +140,5 @@ cron.schedule('0 9 * * *', () => {
   });
 });
 
-// Запускаем бота
 bot.launch();
 console.log('Бот запущен');
