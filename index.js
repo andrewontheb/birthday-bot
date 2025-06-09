@@ -114,6 +114,7 @@ bot.command('join_chat', (ctx) => {
 });
 
 bot.command('show_data', (ctx) => {
+    ctx.reply(ctx.from.id);
     if (ctx.from.id !== process.env.ADMIN_ID) {
       return ctx.reply('У тебя нет доступа к этой команде.');
     }
