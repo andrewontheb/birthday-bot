@@ -13,3 +13,7 @@ model Birthday {
   date      DateTime
   createdAt DateTime @default(now())
 }
+
+model Chat {
+  id    Int    @id
+}
