@@ -1,6 +1,5 @@
-import prisma from './lib/prisma.js';
-import { prismaInsert, prismaGet } from './helpres/db.js';
-
+const { prismaInsert, prismaGet } = require('./helpers/db');
+const prisma = require('./lib/prisma');
 const { Telegraf, Scenes, session } = require('telegraf');
 const fs = require('fs');
 const cron = require('node-cron');
@@ -58,7 +57,7 @@ bot.command('join_chat', async (ctx) => {
     const chatId = ctx.chat?.id;
 
     if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
-        const existing = await prisma.chat.findUnique({ where: { id: chatId } });
+        const existing = prismaGet(ctx);
 
         if (!existing) {
             await prisma.chat.create({ data: { id: chatId } });

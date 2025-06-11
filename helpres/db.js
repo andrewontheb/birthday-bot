@@ -20,4 +20,10 @@ export async function prismaInsert(ctx, birthdayStr) {
       where: { userId: ctx.from.id.toString() },
     });
   }
+
+
+module.exports = {
+    prismaInsert,
+    prismaGet,
+  };
   
