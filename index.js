@@ -113,6 +113,4 @@ cron.schedule('0 9 * * *', async () => {
     }
 });
 
-
 bot.launch();
-console.log('Бот запущен');
