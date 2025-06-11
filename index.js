@@ -1,8 +1,7 @@
-const { prismaInsert, prismaGet } = require('./helpers/db');
 const prisma = require('./lib/prisma');
-const { Telegraf, Scenes, session } = require('telegraf');
-const fs = require('fs');
 const cron = require('node-cron');
+const { prismaInsert, prismaGet } = require('./helpers/db');
+const { Telegraf, Scenes, session } = require('telegraf');
 const { format } = require('date-fns');
 require('dotenv').config();
 
