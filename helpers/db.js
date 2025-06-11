@@ -1,3 +1,5 @@
+const prisma = require('../lib/prisma');
+
 async function prismaInsert(ctx, birthdayStr) {
   const [day, month] = birthdayStr.split('-');
   const date = new Date();
