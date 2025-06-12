@@ -10,6 +10,7 @@ datasource db {
 model Birthday {
   id        Int      @id @default(autoincrement())
   userId    String   @unique
+  chatId    String
   date      DateTime
   createdAt DateTime @default(now())
 }

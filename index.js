@@ -103,12 +103,18 @@ cron.schedule('0 9 * * *', async () => {
 
     for (const user of todayUsers) {
         const age = new Date().getFullYear() - new Date(user.date).getFullYear();
-        for (const chat of chats) {
-            bot.telegram.sendMessage(
-                chat.id,
-                `🎉 Сегодня день рождения у ${user.name}! Поздравляем! 🎂 Тебе сегодня ${age} лет и ты ещё ближе к смерти на один год!`
-            ).catch(console.error);
-        }
+        bot.telegram.sendMessage(
+            user.chatId,
+            `🎉 Сегодня день рождения у ${user.name}! Поздравляем! 🎂 Тебе сегодня ${age} лет и ты ещё ближе к смерти на один год!`
+        ).catch(console.error);
+        
+        // for (const chat of chats) {
+        //     if (chat.id !== user.chatId) continue;
+        //     bot.telegram.sendMessage(
+        //         chat.id,
+        //         `🎉 Сегодня день рождения у ${user.name}! Поздравляем! 🎂 Тебе сегодня ${age} лет и ты ещё ближе к смерти на один год!`
+        //     ).catch(console.error);
+        // }
     }
 });
 

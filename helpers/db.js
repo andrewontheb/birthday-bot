@@ -25,7 +25,7 @@ async function prismaGetBirthDay(ctx) {
 
 async function prismaGetChat(ctx) {
   return await prisma.birthday.findUnique({
-    where: { userId: ctx.from.id.toString() },
+    where: { id: ctx.chat?.id },
   });
 }
 
