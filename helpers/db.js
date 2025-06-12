@@ -8,8 +8,9 @@ async function prismaInsert(ctx, birthdayStr) {
 
   return await prisma.birthday.upsert({
     where: { userId: ctx.from.id.toString() },
-    update: { date },
+    update: { date, chatId: ctx.chat.id },
     create: {
+      chatId: ctx.chat.id,
       userId: ctx.from.id.toString(),
       name: ctx.from.first_name || 'Абобус',
       date,
