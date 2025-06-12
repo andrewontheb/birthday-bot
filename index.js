@@ -1,6 +1,6 @@
 const prisma = require('./lib/prisma');
 const cron = require('node-cron');
-const { prismaInsert, prismaGet } = require('./helpers/db');
+const { prismaInsert, prismaGetBirthDay, prismaGetChat } = require('./helpers/db');
 const { Telegraf, Scenes, session } = require('telegraf');
 const { format } = require('date-fns');
 require('dotenv').config();
@@ -29,8 +29,6 @@ const birthdayWizard = new Scenes.WizardScene(
         }
 
         const birthday = `${d.padStart(2, '0')}-${m.padStart(2, '0')}`;
-        const userId = ctx.from.id;
-        const userName = ctx.from.first_name || 'Друг';
 
         await prismaInsert(ctx, birthday);
 
@@ -56,7 +54,7 @@ bot.command('join_chat', async (ctx) => {
     const chatId = ctx.chat?.id;
 
     if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
-        const existing = prismaGet(ctx);
+        const existing = prismaGetChat(ctx);
 
         if (!existing) {
             await prisma.chat.create({ data: { id: chatId } });
@@ -96,6 +94,7 @@ cron.schedule('0 9 * * *', async () => {
     const today = format(new Date(), 'dd-MM');
     const users = await prisma.birthday.findMany();
     const todayUsers = users.filter(user => {
+        // TODO: check format
         const d = format(user.date, 'dd-MM');
         return d === today;
     });

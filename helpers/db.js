@@ -11,13 +11,19 @@ async function prismaInsert(ctx, birthdayStr) {
     update: { date },
     create: {
       userId: ctx.from.id.toString(),
-      name: ctx.from.first_name || 'Друг',
+      name: ctx.from.first_name || 'Абобус',
       date,
     },
   });
 }
 
-async function prismaGet(ctx) {
+async function prismaGetBirthDay(ctx) {
+  return await prisma.birthday.findUnique({
+    where: { userId: ctx.from.id.toString() },
+  });
+}
+
+async function prismaGetChat(ctx) {
   return await prisma.birthday.findUnique({
     where: { userId: ctx.from.id.toString() },
   });
@@ -26,5 +32,6 @@ async function prismaGet(ctx) {
 
 module.exports = {
   prismaInsert,
-  prismaGet,
+  prismaGetBirthDay,
+  prismaGetChat
 };
