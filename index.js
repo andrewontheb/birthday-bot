@@ -51,13 +51,13 @@ bot.command('set_birthday', (ctx) => {
 
 // Команда для добавления группового чата в список
 bot.command('join_chat', async (ctx) => {
-    const chatId = ctx.chat?.id;
+    const {chatId, title} = ctx.chat;
 
     if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
         const existing = await prismaGetChat(ctx);
 
         if (!existing) {
-            await prisma.chat.create({ data: { id: chatId } });
+            await prisma.chat.create({ data: { id: chatId, title } });
             ctx.reply('Этот чат добавлен в список для поздравлений!');
         } else {
             ctx.reply('Этот чат уже в списке.');

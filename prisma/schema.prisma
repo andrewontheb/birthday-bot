@@ -10,11 +10,12 @@ datasource db {
 model Birthday {
   id        Int      @id @default(autoincrement())
   userId    String   @unique
-  chatId    String
+  chatId    BigInt
   date      DateTime
   createdAt DateTime @default(now())
 }
 
 model Chat {
-  id    Int    @id
+  id    BigInt    @id
+  title String
 }
