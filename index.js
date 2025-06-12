@@ -54,7 +54,7 @@ bot.command('join_chat', async (ctx) => {
     const chatId = ctx.chat?.id;
 
     if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
-        const existing = prismaGetChat(ctx);
+        const existing = await prismaGetChat(ctx);
 
         if (!existing) {
             await prisma.chat.create({ data: { id: chatId } });
@@ -107,7 +107,7 @@ cron.schedule('0 9 * * *', async () => {
             user.chatId,
             `🎉 Сегодня день рождения у ${user.name}! Поздравляем! 🎂 Тебе сегодня ${age} лет и ты ещё ближе к смерти на один год!`
         ).catch(console.error);
-        
+
         // for (const chat of chats) {
         //     if (chat.id !== user.chatId) continue;
         //     bot.telegram.sendMessage(

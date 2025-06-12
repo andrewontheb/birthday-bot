@@ -6,7 +6,7 @@ async function prismaInsert(ctx, birthdayStr) {
   date.setDate(parseInt(day));
   date.setMonth(parseInt(month) - 1);
 
-  await prisma.birthday.upsert({
+  return await prisma.birthday.upsert({
     where: { userId: ctx.from.id.toString() },
     update: { date },
     create: {
