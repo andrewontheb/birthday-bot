@@ -120,5 +120,5 @@ cron.schedule('0 9 * * *', async () => {
     await bot.telegram.deleteWebhook();
     await bot.launch();
     console.log('Бот успешно запущен!');
-});
+})();
 
