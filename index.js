@@ -51,7 +51,7 @@ bot.command('set_birthday', (ctx) => {
 
 // Команда для добавления группового чата в список
 bot.command('join_chat', async (ctx) => {
-    const {id, title} = ctx.chat;
+    const { id, title } = ctx.chat;
 
     if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
         const existing = await prismaGetChat(ctx);
@@ -88,8 +88,6 @@ bot.command('show_data', async (ctx) => {
     ctx.reply(`📢 Чаты:\n${chatsText || 'Пусто'}`);
 });
 
-
-
 cron.schedule('0 9 * * *', async () => {
     const today = format(new Date(), 'dd-MM');
     const users = await prisma.birthday.findMany();
@@ -118,4 +116,9 @@ cron.schedule('0 9 * * *', async () => {
     }
 });
 
-bot.launch();
+(async() => {
+    await bot.telegram.deleteWebhook();
+    await bot.launch();
+    console.log('Бот успешно запущен!');
+});
+
