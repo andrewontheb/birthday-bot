@@ -7,6 +7,14 @@ require('dotenv').config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
+const validateDate = (date) => {
+    const {d, m} = date;
+    return !(!d || !m ||
+    isNaN(d) || isNaN(m) ||
+    +d < 1 || +d > 31 ||
+    +m < 1 || +m > 12);
+}
+
 // Wizard сцена для ввода даты рождения
 const birthdayWizard = new Scenes.WizardScene(
     'birthday-wizard',
@@ -18,14 +26,9 @@ const birthdayWizard = new Scenes.WizardScene(
         const text = ctx.message.text.trim();
         const [d, m] = text.split('-');
 
-        if (
-            !d || !m ||
-            isNaN(d) || isNaN(m) ||
-            +d < 1 || +d > 31 ||
-            +m < 1 || +m > 12
-        ) {
+        if (!validateDate({d, m})) {
             ctx.reply('Неверный формат даты. Попробуй ещё раз (ДД-ММ).');
-            return; // остаёмся на этом шаге, ждём следующего сообщения
+            return;
         }
 
         const birthday = `${d.padStart(2, '0')}-${m.padStart(2, '0')}`;
@@ -42,11 +45,34 @@ const stage = new Scenes.Stage([birthdayWizard]);
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.command('set_birthday', (ctx) => {
-    if (ctx.chat.type !== 'private') {
-        return ctx.reply('Пожалуйста, напиши мне в личку для установки даты рождения.');
+bot.start((ctx) => {
+    const payload = ctx.startPayload;
+    if (payload && payload.startsWith('set_')) {
+        const chatId = payload.replace('set_', '');
+        ctx.session.chatId = chatId;
+        return ctx.scene.enter('birthday-wizard');
     }
-    ctx.scene.enter('birthday-wizard');
+
+    ctx.reply('Привет! Напиши /set_birthday в группе, чтобы указать дату рождения.');
+});
+
+
+bot.command('set_birthday', async (ctx) => {
+    if (ctx.chat.type === 'private') {
+        return ctx.scene.enter('birthday-wizard');
+    }
+
+    const chatId = ctx.chat.id.toString();
+    const button = {
+        text: 'Установить дату рождения',
+        url: `https://t.me/${ctx.me}?start=set_${chatId}`,
+    };
+
+    await ctx.reply('Нажми на кнопку, чтобы установить дату рождения:', {
+        reply_markup: {
+            inline_keyboard: [[button]],
+        },
+    });
 });
 
 // Команда для добавления группового чата в список

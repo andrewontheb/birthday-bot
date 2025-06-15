@@ -2,15 +2,16 @@ const prisma = require('../lib/prisma');
 
 async function prismaInsert(ctx, birthdayStr) {
   const [day, month] = birthdayStr.split('-');
+  const chatId = ctx.session.chatId;
   const date = new Date();
   date.setDate(parseInt(day));
   date.setMonth(parseInt(month) - 1);
 
   return await prisma.birthday.upsert({
     where: { userId: ctx.from.id.toString() },
-    update: { date, chatId: ctx.chat.id },
+    update: { date, chatId },
     create: {
-      chatId: ctx.chat.id,
+      chatId,
       userId: ctx.from.id.toString(),
       name: ctx.from.first_name || 'Абобус',
       date,
